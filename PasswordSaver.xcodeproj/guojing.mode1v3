@@ -324,7 +324,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>23F776A6132F677F00C247E0</string>
+										<string>230D4E31132F6911007BED22</string>
 										<key>history</key>
 										<array>
 											<string>2367FE641195BE2800D35CE6</string>
@@ -341,7 +341,7 @@
 											<string>23F7769C132F666E00C247E0</string>
 											<string>23F7769D132F666E00C247E0</string>
 											<string>23F7769E132F666E00C247E0</string>
-											<string>23F7769F132F666E00C247E0</string>
+											<string>23F776A6132F677F00C247E0</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -353,14 +353,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1007, 289}}</string>
+								<string>{{0, 0}, {1007, 277}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 59 1280 719 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>289pt</string>
+							<string>277pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -373,14 +373,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 294}, {1007, 384}}</string>
+								<string>{{0, 282}, {1007, 396}}</string>
 								<key>RubberWindowFrame</key>
 								<string>0 59 1280 719 0 0 1280 778 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>384pt</string>
+							<string>396pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -399,9 +399,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>23F7767E132F64D100C247E0</string>
+				<string>230D4E2E132F68DF007BED22</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>23F7767F132F64D100C247E0</string>
+				<string>230D4E2F132F68DF007BED22</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -541,12 +541,12 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>23F77692132F65D200C247E0</string>
-		<string>23F77693132F65D200C247E0</string>
+		<string>230D4E39132F6911007BED22</string>
+		<string>230D4E3A132F6911007BED22</string>
 		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>23DB1614118BE77B00356313</string>
-		<string>/Users/guojing/Documents/PasswordSaver/PasswordSaver.xcodeproj</string>
+		<string>/Users/guojing/dev/github/PasswordSaver/PasswordSaver.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>0 59 1280 719 0 0 1280 778 </string>
@@ -626,7 +626,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>23DB1614118BE77B00356313</string>
-				<string>23F77680132F64D100C247E0</string>
+				<string>230D4E30132F68DF007BED22</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -748,13 +748,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>23F7768A132F65D200C247E0</string>
+				<string>230D4E32132F6911007BED22</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>23F7768B132F65D200C247E0</string>
-				<string>23F7768C132F65D200C247E0</string>
-				<string>23F7768D132F65D200C247E0</string>
-				<string>23F7768E132F65D200C247E0</string>
-				<string>23F7768F132F65D200C247E0</string>
+				<string>230D4E33132F6911007BED22</string>
+				<string>230D4E34132F6911007BED22</string>
+				<string>230D4E35132F6911007BED22</string>
+				<string>230D4E36132F6911007BED22</string>
+				<string>230D4E37132F6911007BED22</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -916,7 +916,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>23F77690132F65D200C247E0</string>
+				<string>230D4E38132F6911007BED22</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>
