@@ -11,6 +11,8 @@
 #import "KeyModel.h"
 #import "Consts.h"
 #import "lib/db/FMDatabase.h"
+#import "lib/db/FMDatabaseAdditions.h"
+#import "lib/db/FMResultSet.h"
 
 @interface SqliteHelper : NSObject {
     sqlite3 *database;
@@ -20,7 +22,8 @@
 @property (nonatomic) sqlite3 *database;
 @property (assign) FMDatabase *db;
 
--(BOOL)createConnectionToTable;
+-(BOOL)connect;
+-(BOOL)disconnect;
 -(BOOL)insertKey:(NSString*) key insertPwd:(NSString*) password insertDesc:(NSString*) description;
 -(BOOL)removeKey:(NSString*) key;
 -(BOOL)checkKey:(NSString*) key;

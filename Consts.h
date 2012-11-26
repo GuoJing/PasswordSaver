@@ -11,3 +11,4 @@
 extern NSString * const kFileName;
 extern NSString * const kFilePath;
 extern NSString * const kFile;
+extern NSString * const kDbName;

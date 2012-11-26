@@ -42,8 +42,9 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 
 -(IBAction)onTextInput:(id)sender{
 	//get the password from db
-    [helper createConnectionToTable];
+    [helper connect];
     NSString *pwd = [helper checkPwd:pwd_key_field.title];
+    [pwd retain];
     if(pwd && [pwd isEqualToString:@"N"])
     //if([pwd isEqualToString:@"N"])
     {
@@ -55,6 +56,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         [[NSPasteboard  generalPasteboard] setString: pwd forType: NSStringPboardType];
     }
     [pwd release];
+    [helper disconnect];
 }
 
 -(IBAction)onButtonClicked:(id)sender{
@@ -98,7 +100,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         [loading_resc setDisplayedWhenStopped:NO];
         [loading_resc startAnimation:sender];
         //insert into db
-        [helper createConnectionToTable];
+        [helper connect];
         
         if(![helper checkKey:key_textfield.title])
         {
@@ -113,6 +115,8 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
             [loading_resc setHidden:TRUE];
             error_textfield.title=@"Already the same key.";
         }
+        
+        [helper disconnect];
     }
 }
 
@@ -124,8 +128,8 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 }
 
 -(IBAction)onSearchEnd:(id)sender{
+    [helper connect];
     NSString *searchtext = search_field.title;
-    [helper createConnectionToTable];
     NSMutableArray *array = [helper getValues:searchtext];
     [array_countroller removeObjects:keys];
     [keys removeAllObjects];
@@ -133,6 +137,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     {
         [array_countroller addObject:keyModel];
     }
+    [helper disconnect];
 }
 
 -(IBAction)onSearchWindowOrderFront:(id)sender{

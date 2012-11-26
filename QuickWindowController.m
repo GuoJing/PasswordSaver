@@ -27,8 +27,9 @@
 }
 
 -(IBAction)onSearchEnd:(id)sender{
-    [helper createConnectionToTable];
+    [helper connect];
     NSString *pwd = [helper checkPwd:pwd_key_field.title];
+    [pwd retain];
     if(pwd && [pwd isEqualToString:@"N"])
         //if([pwd isEqualToString:@"N"])
     {
@@ -40,6 +41,8 @@
         [self_panel close];
     }
     [pwd release];
+    [helper disconnect];
+    return;
 }
 
 @end
