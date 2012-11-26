@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Consts : NSObject
-
-@end
+extern NSString * const kFileName;
+extern NSString * const kFilePath;
+extern NSString * const kFile;

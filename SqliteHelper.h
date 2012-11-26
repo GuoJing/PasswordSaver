@@ -9,17 +9,20 @@
 #import <Cocoa/Cocoa.h>
 #import <sqlite3.h>
 #import "KeyModel.h"
-
-#define kFileName @"saver.sql"
+#import "Consts.h"
+#import "lib/db/FMDatabase.h"
 
 @interface SqliteHelper : NSObject {
     sqlite3 *database;
+    FMDatabase *db;
 }
 
-@property (nonatomic) IBOutlet sqlite3 *database;
+@property (nonatomic) sqlite3 *database;
+@property (assign) FMDatabase *db;
 
 -(BOOL)createConnectionToTable;
 -(BOOL)insertKey:(NSString*) key insertPwd:(NSString*) password insertDesc:(NSString*) description;
+-(BOOL)removeKey:(NSString*) key;
 -(BOOL)checkKey:(NSString*) key;
 -(NSString*)checkPwd:(NSString*) key;
 -(NSMutableArray*)getValues:(NSString*) key;

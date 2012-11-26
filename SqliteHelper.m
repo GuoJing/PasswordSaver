@@ -7,14 +7,16 @@
 //
 
 #import "SqliteHelper.h"
-
+#import "Consts.h"
+#import "lib/db/FMDatabase.h"
 
 @implementation SqliteHelper
 
 @synthesize database;
+@synthesize db;
 
 -(BOOL)createConnectionToTable{
-    NSString *paths = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Preferences"];
+    NSString *paths = [NSHomeDirectory() stringByAppendingPathComponent:kFilePath];
     paths = [paths stringByAppendingPathComponent:kFileName];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL fileFinded = [fileManager fileExistsAtPath:paths];
@@ -54,10 +56,13 @@
     if(sqlite3_exec(database,[insertData UTF8String],NULL,NULL,&errorMsg)!=SQLITE_OK)
     {
         sqlite3_close(database);
-        NSLog(@"Open failed or failed to insert:%@",errorMsg);
         return NO;
     }
     NSLog(@"Insert success!");
+    return YES;
+}
+
+-(BOOL)removeKey:(NSString*) key {
     return YES;
 }
 
