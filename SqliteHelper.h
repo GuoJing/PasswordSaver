@@ -11,16 +11,16 @@
 #import "KeyModel.h"
 #import "Consts.h"
 #import "lib/db/FMDatabase.h"
-#import "lib/db/FMDatabaseAdditions.h"
-#import "lib/db/FMResultSet.h"
 
 @interface SqliteHelper : NSObject {
     sqlite3 *database;
     FMDatabase *db;
+    NSUserDefaults *prefs;
 }
 
 @property (nonatomic) sqlite3 *database;
 @property (assign) FMDatabase *db;
+@property (assign) NSUserDefaults *prefs;
 
 -(BOOL)connect;
 -(BOOL)disconnect;
@@ -29,4 +29,6 @@
 -(BOOL)checkKey:(NSString*) key;
 -(NSString*)checkPwd:(NSString*) key;
 -(NSMutableArray*)getValues:(NSString*) key;
+-(NSData*)stringWithEncode:(NSData*) key;
+-(NSData*)stringWithDecode:(NSData*) key;
 @end

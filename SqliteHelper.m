@@ -11,16 +11,19 @@
 #import "lib/db/FMDatabase.h"
 #import "lib/db/FMDatabaseAdditions.h"
 #import "lib/db/FMResultSet.h"
+#import "lib/crypto/crypto.h"
 
 @implementation SqliteHelper
 
 @synthesize database;
 @synthesize db;
+@synthesize prefs;
 
 -(BOOL)connect{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsPath = [paths objectAtIndex:0];
     NSString *path = [docsPath stringByAppendingPathComponent:kFileName];
+    prefs = [NSUserDefaults standardUserDefaults];
     db = [FMDatabase databaseWithPath:path];
     if (![db open]) {
         [db release];
@@ -31,7 +34,7 @@
     
     if (![db tableExists:kDbName]) {
         NSLog(@"create table");
-        [db executeUpdate:@"create table if not exists password_saver (key text,pwd text,desc text)"];
+        [db executeUpdate:@"create table if not exists password_saver (key text,pwd,desc text)"];
     };
     
     return YES;
@@ -46,22 +49,24 @@
     if ([key isEqualToString:(@"")]) {
         return NO;
     };
-    [db executeUpdate:@"insert into password_saver (key,pwd,desc) values (?,?,?)", key,password,description];
+    NSData * nkey = [password dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *code = [self stringWithEncode:nkey];
+    [db executeUpdate:@"insert into password_saver (key,pwd,desc) values (?,?,?)", key, code, description];
     [db commit];
     return YES;
 }
 
 -(BOOL)removeKey:(NSString*) key {
+    [db executeUpdate:@"delete from password_saver where key = ?", key];
+    [db commit];
     return YES;
 }
 
 -(BOOL)checkKey:(NSString*) key{
     FMResultSet *results = [db executeQuery:@"select * from password_saver where key=?", key];
-    NSLog(@"Search password by key");
-    while ([results next]) {
-        [results close];
+    if([results next]){
         return YES;
-    };
+    }
     return NO;
 }
 
@@ -69,7 +74,10 @@
     FMResultSet *results = [db executeQuery:@"select * from password_saver where key=?", key];
     NSLog(@"Search password by key %@", key);
     while ([results next]) {
-        NSString *pwd = [results stringForColumn:@"pwd"];
+        NSData *code = [results dataForColumn:@"pwd"];
+        NSLog(@"password is %@", code);
+        code = [self stringWithDecode:code];
+        NSString* pwd = [[NSString alloc] initWithData:code encoding:NSUTF8StringEncoding];
         NSLog(@"password is %@", pwd);
         [results close];
         return pwd;
@@ -79,19 +87,45 @@
 
 -(NSMutableArray*)getValues:(NSString*) key{
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSString *sql = [[NSString alloc] initWithFormat:@"select key,desc,pwd from password_saver where key like '%@%%'",key];
+    NSString *sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver where key like '%@%%'",key];
     if ([key isEqualToString:@""]) {
-        sql = [[NSString alloc] initWithFormat:@"select key,desc,pwd from password_saver"];
+        sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver"];
     }
     FMResultSet *results = [db executeQuery:sql];
     while ([results next]){
         NSString *keyValue = [results stringForColumn:@"key"];
+        NSString * pwdValue = @"";
         NSString *descValue = [results stringForColumn:@"desc"];
-        NSString *pwdValue = [results stringForColumn:@"pwd"];
         KeyModel *keyModel = [[KeyModel alloc] initWithKey:keyValue initWithPassword:pwdValue initWithDescription:descValue];
         [array addObject:keyModel];
     };
     return array;
 }
 
+-(NSData*)stringWithEncode:(NSData*) nkey{
+    CCAlgorithm algo = kCCAlgorithmAES128;
+	CCOptions opts = kCCOptionPKCS7Padding;
+	NSString * iv = nil;
+    CCCryptorStatus status = kCCSuccess;
+    nkey = [nkey dataEncryptedUsingAlgorithm: algo
+                                         key: kKey
+                        initializationVector: iv
+                                     options: opts
+                                       error: &status];
+    NSLog(@"Encode to %@", nkey);
+    return nkey;
+}
+
+-(NSData*)stringWithDecode:(NSData*) nkey{
+    CCAlgorithm algo = kCCAlgorithmAES128;
+	CCOptions opts = kCCOptionPKCS7Padding;
+	NSString * iv = nil;
+    CCCryptorStatus status = kCCSuccess;
+    nkey = [nkey decryptedDataUsingAlgorithm: algo
+                                         key: kKey
+                        initializationVector: iv
+                                     options: opts
+                                       error: &status];
+    return nkey;
+}
 @end

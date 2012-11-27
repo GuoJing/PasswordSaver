@@ -18,6 +18,7 @@
 		2383529216635FF200559AB2 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528B16635FF200559AB2 /* FMDatabasePool.m */; };
 		2383529316635FF200559AB2 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528D16635FF200559AB2 /* FMDatabaseQueue.m */; };
 		2383529416635FF200559AB2 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528F16635FF200559AB2 /* FMResultSet.m */; };
+		2383530416646C8F00559AB2 /* crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383530216646C8F00559AB2 /* crypto.m */; };
 		23DB161D118BE85000356313 /* MainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DB161C118BE85000356313 /* MainController.m */; };
 		23DB92F711966AEB00F2186A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23DB92F611966AEB00F2186A /* Carbon.framework */; };
 		23DB93981196748E00F2186A /* QuickWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23DB93971196748E00F2186A /* QuickWindow.xib */; };
@@ -50,6 +51,8 @@
 		2383528D16635FF200559AB2 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseQueue.m; path = lib/db/FMDatabaseQueue.m; sourceTree = "<group>"; };
 		2383528E16635FF200559AB2 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = lib/db/FMResultSet.h; sourceTree = "<group>"; };
 		2383528F16635FF200559AB2 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = lib/db/FMResultSet.m; sourceTree = "<group>"; };
+		2383530216646C8F00559AB2 /* crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = crypto.m; path = lib/crypto/crypto.m; sourceTree = "<group>"; };
+		2383530316646C8F00559AB2 /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = lib/crypto/crypto.h; sourceTree = "<group>"; };
 		23DB161B118BE85000356313 /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainController.h; sourceTree = "<group>"; };
 		23DB161C118BE85000356313 /* MainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainController.m; sourceTree = "<group>"; };
 		23DB92F611966AEB00F2186A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -81,7 +84,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				23B01ED51663572400898B9B /* Lib */,
+				23B01ED51663572400898B9B /* lib */,
 				23DB161B118BE85000356313 /* MainController.h */,
 				23DB161C118BE85000356313 /* MainController.m */,
 				2339BA9C118EFF3C000D8D99 /* SqliteHelper.h */,
@@ -122,7 +125,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		23B01ED51663572400898B9B /* Lib */ = {
+		238353001664690A00559AB2 /* db */ = {
 			isa = PBXGroup;
 			children = (
 				2383528616635FF200559AB2 /* FMDatabase.h */,
@@ -136,7 +139,25 @@
 				2383528E16635FF200559AB2 /* FMResultSet.h */,
 				2383528F16635FF200559AB2 /* FMResultSet.m */,
 			);
-			name = Lib;
+			name = db;
+			sourceTree = "<group>";
+		};
+		2383530116646BF100559AB2 /* crypto */ = {
+			isa = PBXGroup;
+			children = (
+				2383530216646C8F00559AB2 /* crypto.m */,
+				2383530316646C8F00559AB2 /* crypto.h */,
+			);
+			name = crypto;
+			sourceTree = "<group>";
+		};
+		23B01ED51663572400898B9B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				2383530116646BF100559AB2 /* crypto */,
+				238353001664690A00559AB2 /* db */,
+			);
+			name = lib;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* PasswordSaver */ = {
@@ -261,6 +282,7 @@
 				2383529216635FF200559AB2 /* FMDatabasePool.m in Sources */,
 				2383529316635FF200559AB2 /* FMDatabaseQueue.m in Sources */,
 				2383529416635FF200559AB2 /* FMResultSet.m in Sources */,
+				2383530416646C8F00559AB2 /* crypto.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
