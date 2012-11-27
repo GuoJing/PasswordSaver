@@ -36,7 +36,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     [super init];
     keys = [[NSMutableArray alloc] init];
     helper = [[SqliteHelper alloc] init];
-    
     return self;
 }
 
@@ -73,6 +72,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 	//	[add_window showWindow: sender];
 	//}
     [self emptyTextField:sender];
+    NSLog(@"Add Botton Clicked");
 	if(![add_panel isVisible])
     {
 		[add_panel makeKeyAndOrderFront:sender];
@@ -125,6 +125,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     pwd_textfield.title=@"";
     decs_textfield.title=@"";
     error_textfield.title=@"";
+    NSLog(@"open window");
 }
 
 -(IBAction)onSearchEnd:(id)sender{
@@ -154,8 +155,11 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     InstallApplicationEventHandler(&myHotKeyHandler,1,&eventType,self,NULL);
     myHotKeyID.signature='mhk1';
     myHotKeyID.id=1;
+    NSLog(@"%d", cmdKey);
+    NSLog(@"%d", optionKey);
     RegisterEventHotKey(49, cmdKey+optionKey, myHotKeyID, GetApplicationEventTarget(), 0, &myHotKeyRef);
     NSLog(@"awake");
+    self.pwd_textfield.title = [self genRandStringLength:20];
 }
 
 OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void  *userData){
@@ -171,6 +175,20 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 -(void)dealloc{
     [self.array_countroller release];
     [super dealloc];
+}
+
+-(NSString *) genRandStringLength: (int) len {
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    return randomString;
+}
+
+-(IBAction)onKeyInputEnd:(id)sender{
+    self.pwd_textfield.title = self.key_textfield.title;
 }
 
 @end
