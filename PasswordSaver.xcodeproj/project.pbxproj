@@ -19,6 +19,7 @@
 		2383529316635FF200559AB2 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528D16635FF200559AB2 /* FMDatabaseQueue.m */; };
 		2383529416635FF200559AB2 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528F16635FF200559AB2 /* FMResultSet.m */; };
 		2383530416646C8F00559AB2 /* crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383530216646C8F00559AB2 /* crypto.m */; };
+		239B5D2A16660A9800BFB626 /* AddWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239B5D2916660A9800BFB626 /* AddWindowController.m */; };
 		23DB161D118BE85000356313 /* MainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DB161C118BE85000356313 /* MainController.m */; };
 		23DB92F711966AEB00F2186A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23DB92F611966AEB00F2186A /* Carbon.framework */; };
 		23DB93981196748E00F2186A /* QuickWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23DB93971196748E00F2186A /* QuickWindow.xib */; };
@@ -53,6 +54,8 @@
 		2383528F16635FF200559AB2 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = lib/db/FMResultSet.m; sourceTree = "<group>"; };
 		2383530216646C8F00559AB2 /* crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = crypto.m; path = lib/crypto/crypto.m; sourceTree = "<group>"; };
 		2383530316646C8F00559AB2 /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = lib/crypto/crypto.h; sourceTree = "<group>"; };
+		239B5D2816660A9800BFB626 /* AddWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddWindowController.h; sourceTree = "<group>"; };
+		239B5D2916660A9800BFB626 /* AddWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddWindowController.m; sourceTree = "<group>"; };
 		23DB161B118BE85000356313 /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainController.h; sourceTree = "<group>"; };
 		23DB161C118BE85000356313 /* MainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainController.m; sourceTree = "<group>"; };
 		23DB92F611966AEB00F2186A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -95,6 +98,8 @@
 				23DB93C61196771300F2186A /* QuickWindowController.m */,
 				235FA348166315CB00F0E4A8 /* Consts.h */,
 				235FA349166315CB00F0E4A8 /* Consts.m */,
+				239B5D2816660A9800BFB626 /* AddWindowController.h */,
+				239B5D2916660A9800BFB626 /* AddWindowController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -283,6 +288,7 @@
 				2383529316635FF200559AB2 /* FMDatabaseQueue.m in Sources */,
 				2383529416635FF200559AB2 /* FMResultSet.m in Sources */,
 				2383530416646C8F00559AB2 /* crypto.m in Sources */,
+				239B5D2A16660A9800BFB626 /* AddWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
