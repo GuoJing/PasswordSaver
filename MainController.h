@@ -66,5 +66,5 @@
 -(IBAction)onSearchWindowOrderFront:(id)sender;
 -(IBAction)onSearchWindowOpend:(id)sender;
 -(IBAction)onKeyInputEnd:(id)sender;
-
+-(IBAction)openAddKeyWindow:(id)sender;
 @end

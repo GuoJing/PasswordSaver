@@ -40,7 +40,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 }
 
 -(IBAction)onTextInput:(id)sender{
-	//get the password from db
     [helper connect];
     NSString *pwd = [helper checkPwd:pwd_key_field.title];
     [pwd retain];
@@ -63,14 +62,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 }
 
 -(IBAction)onAddButtonClicked:(id)sender{
-	//if(!add_window)
-	//	add_window = [[NSWindowController alloc] initWithWindowNibName:@"AddPanel"];
-	//NSWindow *wnd = [add_window window];
-	//if(![wnd isVisible])
-	//	[wnd makeKeyAndOrderFront:sender];
-	//else {
-	//	[add_window showWindow: sender];
-	//}
     [self emptyTextField:sender];
     NSLog(@"Add Botton Clicked");
 	if(![add_panel isVisible])
@@ -166,9 +157,11 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     NSLog(@"call hot key %@", userData);
     NSWindowController *add_window = [[NSWindowController alloc] initWithWindowNibName:@"QuickWindow"];
     [add_window loadWindow];
-    [[add_window window] makeMainWindow];
-    [add_window showWindow:[add_window window]];
-    [[add_window window] makeMainWindow];
+    if (![[add_window window] isVisible]){
+        [[add_window window] makeMainWindow];
+        [add_window showWindow:[add_window window]];
+        [[add_window window] makeMainWindow];
+    }
     return noErr;
 }
 
@@ -189,6 +182,13 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 
 -(IBAction)onKeyInputEnd:(id)sender{
     self.pwd_textfield.title = self.key_textfield.title;
+}
+
+-(IBAction)openAddKeyWindow:(id)sender{
+    NSWindowController *key_window = [[NSWindowController alloc] initWithWindowNibName:@"AddKeyWindow"];
+    if(![[key_window window] isVisible]) {
+        [key_window showWindow:sender];
+    }
 }
 
 @end

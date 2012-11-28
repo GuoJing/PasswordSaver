@@ -23,7 +23,9 @@
 }
 
 -(void)awakeFromNib{
-    [[self self_panel] makeKeyAndOrderFront:self_panel];
+    if (![[self self_panel] isVisible]) {
+        [[self self_panel] makeKeyAndOrderFront:self_panel];
+    }
 }
 
 -(IBAction)onSearchEnd:(id)sender{
