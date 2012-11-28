@@ -36,14 +36,13 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     [super init];
     keys = [[NSMutableArray alloc] init];
     helper = [[SqliteHelper alloc] init];
-    
     return self;
 }
 
 -(IBAction)onTextInput:(id)sender{
-	//get the password from db
-    [helper createConnectionToTable];
+    [helper connect];
     NSString *pwd = [helper checkPwd:pwd_key_field.title];
+    [pwd retain];
     if(pwd && [pwd isEqualToString:@"N"])
     //if([pwd isEqualToString:@"N"])
     {
@@ -55,6 +54,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         [[NSPasteboard  generalPasteboard] setString: pwd forType: NSStringPboardType];
     }
     [pwd release];
+    [helper disconnect];
 }
 
 -(IBAction)onButtonClicked:(id)sender{
@@ -62,15 +62,8 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 }
 
 -(IBAction)onAddButtonClicked:(id)sender{
-	//if(!add_window)
-	//	add_window = [[NSWindowController alloc] initWithWindowNibName:@"AddPanel"];
-	//NSWindow *wnd = [add_window window];
-	//if(![wnd isVisible])
-	//	[wnd makeKeyAndOrderFront:sender];
-	//else {
-	//	[add_window showWindow: sender];
-	//}
     [self emptyTextField:sender];
+    NSLog(@"Add Botton Clicked");
 	if(![add_panel isVisible])
     {
 		[add_panel makeKeyAndOrderFront:sender];
@@ -98,7 +91,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         [loading_resc setDisplayedWhenStopped:NO];
         [loading_resc startAnimation:sender];
         //insert into db
-        [helper createConnectionToTable];
+        [helper connect];
         
         if(![helper checkKey:key_textfield.title])
         {
@@ -113,6 +106,8 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
             [loading_resc setHidden:TRUE];
             error_textfield.title=@"Already the same key.";
         }
+        
+        [helper disconnect];
     }
 }
 
@@ -121,11 +116,12 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     pwd_textfield.title=@"";
     decs_textfield.title=@"";
     error_textfield.title=@"";
+    NSLog(@"open window");
 }
 
 -(IBAction)onSearchEnd:(id)sender{
+    [helper connect];
     NSString *searchtext = search_field.title;
-    [helper createConnectionToTable];
     NSMutableArray *array = [helper getValues:searchtext];
     [array_countroller removeObjects:keys];
     [keys removeAllObjects];
@@ -133,6 +129,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     {
         [array_countroller addObject:keyModel];
     }
+    [helper disconnect];
 }
 
 -(IBAction)onSearchWindowOrderFront:(id)sender{
@@ -149,23 +146,49 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     InstallApplicationEventHandler(&myHotKeyHandler,1,&eventType,self,NULL);
     myHotKeyID.signature='mhk1';
     myHotKeyID.id=1;
+    NSLog(@"%d", cmdKey);
+    NSLog(@"%d", optionKey);
     RegisterEventHotKey(49, cmdKey+optionKey, myHotKeyID, GetApplicationEventTarget(), 0, &myHotKeyRef);
     NSLog(@"awake");
+    self.pwd_textfield.title = [self genRandStringLength:20];
 }
 
 OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void  *userData){
     NSLog(@"call hot key %@", userData);
     NSWindowController *add_window = [[NSWindowController alloc] initWithWindowNibName:@"QuickWindow"];
     [add_window loadWindow];
-    [[add_window window] makeMainWindow];
-    [add_window showWindow:[add_window window]];
-    [[add_window window] makeMainWindow];
+    if (![[add_window window] isVisible]){
+        [[add_window window] makeMainWindow];
+        [add_window showWindow:[add_window window]];
+        [[add_window window] makeMainWindow];
+    }
     return noErr;
 }
 
 -(void)dealloc{
     [self.array_countroller release];
     [super dealloc];
+}
+
+-(NSString *) genRandStringLength: (int) len {
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    return randomString;
+}
+
+-(IBAction)onKeyInputEnd:(id)sender{
+    self.pwd_textfield.title = self.key_textfield.title;
+}
+
+-(IBAction)openAddKeyWindow:(id)sender{
+    NSWindowController *key_window = [[NSWindowController alloc] initWithWindowNibName:@"AddKeyWindow"];
+    if(![[key_window window] isVisible]) {
+        [key_window showWindow:sender];
+    }
 }
 
 @end

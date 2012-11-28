@@ -15,15 +15,20 @@
 @interface SqliteHelper : NSObject {
     sqlite3 *database;
     FMDatabase *db;
+    NSUserDefaults *prefs;
 }
 
 @property (nonatomic) sqlite3 *database;
 @property (assign) FMDatabase *db;
+@property (assign) NSUserDefaults *prefs;
 
--(BOOL)createConnectionToTable;
+-(BOOL)connect;
+-(BOOL)disconnect;
 -(BOOL)insertKey:(NSString*) key insertPwd:(NSString*) password insertDesc:(NSString*) description;
 -(BOOL)removeKey:(NSString*) key;
 -(BOOL)checkKey:(NSString*) key;
 -(NSString*)checkPwd:(NSString*) key;
 -(NSMutableArray*)getValues:(NSString*) key;
+-(NSData*)stringWithEncode:(NSData*) key;
+-(NSData*)stringWithDecode:(NSData*) key;
 @end

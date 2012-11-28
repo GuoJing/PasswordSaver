@@ -55,6 +55,7 @@
 @property (nonatomic,retain) IBOutlet NSMutableArray *keys;
 @property (nonatomic,retain) IBOutlet NSTableView *table_view;
 @property (nonatomic,retain) IBOutlet NSArrayController *array_countroller;
+-(NSString *) genRandStringLength: (int) len;
 
 -(IBAction)onTextInput:(id)sender;
 -(IBAction)onButtonClicked:(id)sender;
@@ -64,5 +65,6 @@
 -(IBAction)onSearchEnd:(id)sender;
 -(IBAction)onSearchWindowOrderFront:(id)sender;
 -(IBAction)onSearchWindowOpend:(id)sender;
-
+-(IBAction)onKeyInputEnd:(id)sender;
+-(IBAction)openAddKeyWindow:(id)sender;
 @end
