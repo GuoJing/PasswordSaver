@@ -9,135 +9,123 @@
 #import "SqliteHelper.h"
 #import "Consts.h"
 #import "lib/db/FMDatabase.h"
+#import "lib/db/FMDatabaseAdditions.h"
+#import "lib/db/FMResultSet.h"
+#import "lib/crypto/crypto.h"
 
 @implementation SqliteHelper
 
 @synthesize database;
 @synthesize db;
+@synthesize prefs;
 
--(BOOL)createConnectionToTable{
-    NSString *paths = [NSHomeDirectory() stringByAppendingPathComponent:kFilePath];
-    paths = [paths stringByAppendingPathComponent:kFileName];
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL fileFinded = [fileManager fileExistsAtPath:paths];
-    
-    if(fileFinded)
-    {
-        if(sqlite3_open([paths UTF8String],&database)!=SQLITE_OK)
-        {
-            sqlite3_close(database);
-            NSLog(@"Open Failed");
-            return NO;
-        }
+-(BOOL)connect{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *path = [docsPath stringByAppendingPathComponent:kFileName];
+    prefs = [NSUserDefaults standardUserDefaults];
+    db = [FMDatabase databaseWithPath:path];
+    if (![db open]) {
+        [db release];
+        NSLog(@"Open db error!");
+        return NO;
     }
-    else
-    {
-        if(sqlite3_open([paths UTF8String],&database)!=SQLITE_OK)
-        {
-            sqlite3_close(database);
-            NSLog(@"Open Failed");
-            return NO;
-        }
-    }
+    NSLog(@"Open db success!");
     
+    if (![db tableExists:kDbName]) {
+        NSLog(@"create table");
+        [db executeUpdate:@"create table if not exists password_saver (key text,pwd,desc text)"];
+    };
+    
+    return YES;
+}
+
+-(BOOL)disconnect{
+    [db close];
     return YES;
 }
 
 -(BOOL)insertKey:(NSString*) key insertPwd:(NSString*) password insertDesc:(NSString*) description{
-    char *errorMsg;
-    NSString *createSQL = @"create table if not exists password_saver (key text,pwd text,desc text)";
-    if(sqlite3_exec(database,[createSQL UTF8String],NULL,NULL,&errorMsg)!=SQLITE_OK)
-    {
-        sqlite3_close(database);
-        NSLog(@"Open failed or init password_saver");
-    }
-    
-    NSString *insertData = [[NSString alloc] initWithFormat:@"insert into password_saver (key,pwd,desc) values ('%@','%@','%@')",key,password,description];
-    if(sqlite3_exec(database,[insertData UTF8String],NULL,NULL,&errorMsg)!=SQLITE_OK)
-    {
-        sqlite3_close(database);
+    if ([key isEqualToString:(@"")]) {
         return NO;
-    }
-    NSLog(@"Insert success!");
+    };
+    NSData * nkey = [password dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *code = [self stringWithEncode:nkey];
+    [db executeUpdate:@"insert into password_saver (key,pwd,desc) values (?,?,?)", key, code, description];
+    [db commit];
     return YES;
 }
 
 -(BOOL)removeKey:(NSString*) key {
+    [db executeUpdate:@"delete from password_saver where key = ?", key];
+    [db commit];
     return YES;
 }
 
 -(BOOL)checkKey:(NSString*) key{
-    NSString *getUserCountSQL = [[NSString alloc] initWithFormat:@"select * from password_saver where key='%@'",key];
-    sqlite3_stmt *statement;
-    NSLog(@"Search user");
-    
-    if(sqlite3_prepare_v2(database,[getUserCountSQL UTF8String],-1,&statement,nil)==SQLITE_OK)
-    {
-        if(sqlite3_step(statement) == SQLITE_ROW)
-        {
-            int row = sqlite3_column_int(statement,0);
-            char* rowData = (char*)sqlite3_column_text(statement,1);
-            NSString *fieldName = [[NSString alloc] initWithFormat:@"show%d",row];
-            NSString *fieldValue = [[NSString alloc] initWithUTF8String:rowData];
-            NSLog(@"fieldName is :%@,fieldValue is :%@",fieldName,fieldValue);
-            [fieldName release];
-            [fieldValue release];
-            sqlite3_finalize(statement);
-            return YES;
-        }
+    FMResultSet *results = [db executeQuery:@"select * from password_saver where key=?", key];
+    if([results next]){
+        return YES;
     }
-    
     return NO;
 }
 
 -(NSString*)checkPwd:(NSString*) key{
-    NSString *getUserCountSQL = [[NSString alloc] initWithFormat:@"select * from password_saver where key='%@'",key];
-    sqlite3_stmt *statement;
-    NSLog(@"Search user");
-    NSString *ret;
-    if(sqlite3_prepare_v2(database,[getUserCountSQL UTF8String],-1,&statement,nil)==SQLITE_OK)
-    {
-        if(sqlite3_step(statement) == SQLITE_ROW)
-        {
-            int row = sqlite3_column_int(statement,0);
-            char* rowData = (char*)sqlite3_column_text(statement,1);
-            NSString *fieldName = [[NSString alloc] initWithFormat:@"show%d",row];
-            NSString *fieldValue = [[NSString alloc] initWithUTF8String:rowData];
-            NSLog(@"fieldName is :%@,fieldValue is :%@",fieldName,fieldValue);
-            ret = fieldValue;
-            [fieldName release];
-            [fieldValue release];
-            sqlite3_finalize(statement);
-            return [[NSString alloc] initWithFormat:@"%@", ret];
-        }
-    }
-    
+    FMResultSet *results = [db executeQuery:@"select * from password_saver where key=?", key];
+    NSLog(@"Search password by key %@", key);
+    while ([results next]) {
+        NSData *code = [results dataForColumn:@"pwd"];
+        NSLog(@"password is %@", code);
+        code = [self stringWithDecode:code];
+        NSString* pwd = [[NSString alloc] initWithData:code encoding:NSUTF8StringEncoding];
+        NSLog(@"password is %@", pwd);
+        [results close];
+        return pwd;
+    };
     return @"N";
 }
 
 -(NSMutableArray*)getValues:(NSString*) key{
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSString *getUserCountSQL = [[NSString alloc] initWithFormat:@"select key,desc,pwd from password_saver where key like '%@%%'",key];
+    NSString *sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver where key like '%@%%'",key];
     if ([key isEqualToString:@""]) {
-        getUserCountSQL = [[NSString alloc] initWithFormat:@"select key,desc,pwd from password_saver"];
+        sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver"];
     }
-    sqlite3_stmt *statement;
-    if(sqlite3_prepare_v2(database,[getUserCountSQL UTF8String],-1,&statement,nil)==SQLITE_OK)
-    {
-        while(sqlite3_step(statement) == SQLITE_ROW)
-        {
-            char* keyData = (char*)sqlite3_column_text(statement,0);
-            char* descData = (char*)sqlite3_column_text(statement,1);
-            char* pwdData = (char*)sqlite3_column_text(statement,2);
-            NSString *keyValue = [[NSString alloc] initWithUTF8String:keyData];
-            NSString *descValue = [[NSString alloc] initWithUTF8String:descData];
-            NSString *pwdValue = [[NSString alloc] initWithUTF8String:pwdData];
-            KeyModel *keyModel = [[KeyModel alloc] initWithKey:keyValue initWithPassword:pwdValue initWithDescription:descValue]; 
-            [array addObject:keyModel];
-        }
-        sqlite3_finalize(statement);
-    }
+    FMResultSet *results = [db executeQuery:sql];
+    while ([results next]){
+        NSString *keyValue = [results stringForColumn:@"key"];
+        NSString * pwdValue = @"";
+        NSString *descValue = [results stringForColumn:@"desc"];
+        KeyModel *keyModel = [[KeyModel alloc] initWithKey:keyValue initWithPassword:pwdValue initWithDescription:descValue];
+        [array addObject:keyModel];
+    };
     return array;
 }
 
+-(NSData*)stringWithEncode:(NSData*) nkey{
+    CCAlgorithm algo = kCCAlgorithmAES128;
+	CCOptions opts = kCCOptionPKCS7Padding;
+	NSString * iv = nil;
+    CCCryptorStatus status = kCCSuccess;
+    nkey = [nkey dataEncryptedUsingAlgorithm: algo
+                                         key: kKey
+                        initializationVector: iv
+                                     options: opts
+                                       error: &status];
+    NSLog(@"Encode to %@", nkey);
+    return nkey;
+}
+
+-(NSData*)stringWithDecode:(NSData*) nkey{
+    CCAlgorithm algo = kCCAlgorithmAES128;
+	CCOptions opts = kCCOptionPKCS7Padding;
+	NSString * iv = nil;
+    CCCryptorStatus status = kCCSuccess;
+    nkey = [nkey decryptedDataUsingAlgorithm: algo
+                                         key: kKey
+                        initializationVector: iv
+                                     options: opts
+                                       error: &status];
+    return nkey;
+}
 @end
