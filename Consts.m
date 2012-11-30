@@ -12,3 +12,6 @@ NSString * const kFileName = @"nsaver.sql";
 
 NSString * const kDbName = @"password_saver";
 NSString * const kKey = @"howcouldanyonedothi";
+
+NSString * const appKey = @"uid26iomr01vzd7";
+NSString * const appSecret = @"idnjjl9p0nwpfid";

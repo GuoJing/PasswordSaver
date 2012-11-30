@@ -11,3 +11,6 @@
 extern NSString * const kFileName;
 extern NSString * const kDbName;
 extern NSString * const kKey;
+
+extern NSString * const appKey;
+extern NSString * const appSecret;

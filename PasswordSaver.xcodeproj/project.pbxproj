@@ -13,6 +13,9 @@
 		2339BA9B118EFD62000D8D99 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2339BA9A118EFD62000D8D99 /* libsqlite3.0.dylib */; };
 		2339BA9E118EFF3C000D8D99 /* SqliteHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2339BA9D118EFF3C000D8D99 /* SqliteHelper.m */; };
 		235FA34A166315CC00F0E4A8 /* Consts.m in Sources */ = {isa = PBXBuildFile; fileRef = 235FA349166315CB00F0E4A8 /* Consts.m */; };
+		2364D27D16690A2F00E96CA3 /* DropboxOSX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2364D27C16690A2F00E96CA3 /* DropboxOSX.framework */; };
+		2364D27E16690A4800E96CA3 /* DropboxOSX.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2364D27C16690A2F00E96CA3 /* DropboxOSX.framework */; };
+		2367C1891669026D00B864A3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2367C1881669026D00B864A3 /* Security.framework */; };
 		2383529016635FF200559AB2 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528716635FF200559AB2 /* FMDatabase.m */; };
 		2383529116635FF200559AB2 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528916635FF200559AB2 /* FMDatabaseAdditions.m */; };
 		2383529216635FF200559AB2 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528B16635FF200559AB2 /* FMDatabasePool.m */; };
@@ -29,6 +32,19 @@
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2367C18A1669027400B864A3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2364D27E16690A4800E96CA3 /* DropboxOSX.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -42,6 +58,8 @@
 		2339BA9D118EFF3C000D8D99 /* SqliteHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SqliteHelper.m; sourceTree = "<group>"; };
 		235FA348166315CB00F0E4A8 /* Consts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Consts.h; sourceTree = "<group>"; };
 		235FA349166315CB00F0E4A8 /* Consts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Consts.m; sourceTree = "<group>"; };
+		2364D27C16690A2F00E96CA3 /* DropboxOSX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxOSX.framework; sourceTree = "<group>"; };
+		2367C1881669026D00B864A3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		2383528616635FF200559AB2 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = lib/db/FMDatabase.h; sourceTree = "<group>"; };
 		2383528716635FF200559AB2 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = lib/db/FMDatabase.m; sourceTree = "<group>"; };
 		2383528816635FF200559AB2 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = lib/db/FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -75,9 +93,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2367C1891669026D00B864A3 /* Security.framework in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				2339BA9B118EFD62000D8D99 /* libsqlite3.0.dylib in Frameworks */,
 				23DB92F711966AEB00F2186A /* Carbon.framework in Frameworks */,
+				2364D27D16690A2F00E96CA3 /* DropboxOSX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,6 +135,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2364D27C16690A2F00E96CA3 /* DropboxOSX.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
@@ -168,6 +189,7 @@
 		29B97314FDCFA39411CA2CEA /* PasswordSaver */ = {
 			isa = PBXGroup;
 			children = (
+				2367C1881669026D00B864A3 /* Security.framework */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -219,6 +241,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				2367C18A1669027400B864A3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -320,6 +343,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -327,6 +354,7 @@
 				GCC_PREFIX_HEADER = PasswordSaver_Prefix.pch;
 				INFOPLIST_FILE = "PasswordSaver-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = PasswordSaver;
 			};
 			name = Debug;
@@ -337,11 +365,16 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = PasswordSaver_Prefix.pch;
 				INFOPLIST_FILE = "PasswordSaver-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = PasswordSaver;
 			};
 			name = Release;

@@ -6,7 +6,10 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
+#import <DropboxOSX/DropboxOSX.h>
 #import "MainController.h"
+#import <stdlib.h>
+#import <time.h>
 
 OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void  *userData);
 
@@ -20,10 +23,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 @synthesize add_window;
 @synthesize add_panel;
 @synthesize search_panel;
-@synthesize key_textfield;
-@synthesize pwd_textfield;
-@synthesize decs_textfield;
-@synthesize done_button;
 @synthesize loading_resc;
 @synthesize error_textfield;
 @synthesize mainwindow;
@@ -31,6 +30,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 @synthesize search_field;
 @synthesize table_view;
 @synthesize array_countroller;
+@synthesize link_button;
 
 -(id)init{
     [super init];
@@ -58,15 +58,12 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 }
 
 -(IBAction)onButtonClicked:(id)sender{
-
-}
-
--(IBAction)onAddButtonClicked:(id)sender{
-    [self emptyTextField:sender];
-    NSLog(@"Add Botton Clicked");
-	if(![add_panel isVisible])
-    {
-		[add_panel makeKeyAndOrderFront:sender];
+    if ([[DBSession sharedSession] isLinked]) {
+        // The link button turns into an unlink button when you're linked
+        [[DBSession sharedSession] unlinkAll];
+        restClient = nil;
+    } else {
+        [[DBAuthHelperOSX sharedHelper] authenticate];
     }
 }
 
@@ -76,47 +73,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 		[search_panel makeKeyAndOrderFront:sender];
         [self onSearchEnd:sender];
     }
-}
-
--(IBAction)onAddPanelClosed:(id)sender{
-    BOOL is_key_entered=[key_textfield.title isEqual:@""];
-    BOOL is_pwd_entered=[pwd_textfield.title isEqual:@""];
-    if(is_key_entered||is_pwd_entered)
-    {
-        error_textfield.title=@"Please input all the text field.";
-    }
-    else
-    {
-        [loading_resc setHidden:FALSE];
-        [loading_resc setDisplayedWhenStopped:NO];
-        [loading_resc startAnimation:sender];
-        //insert into db
-        [helper connect];
-        
-        if(![helper checkKey:key_textfield.title])
-        {
-            [helper insertKey:key_textfield.title insertPwd:pwd_textfield.title insertDesc:decs_textfield.title];
-            [loading_resc stopAnimation:sender];
-            [loading_resc setHidden:TRUE];
-            [add_panel orderOut:sender];
-        }
-        else
-        {
-            [loading_resc stopAnimation:sender];
-            [loading_resc setHidden:TRUE];
-            error_textfield.title=@"Already the same key.";
-        }
-        
-        [helper disconnect];
-    }
-}
-
--(IBAction)emptyTextField:(id)sender{
-    key_textfield.title=@"";
-    pwd_textfield.title=@"";
-    decs_textfield.title=@"";
-    error_textfield.title=@"";
-    NSLog(@"open window");
 }
 
 -(IBAction)onSearchEnd:(id)sender{
@@ -150,7 +106,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     NSLog(@"%d", optionKey);
     RegisterEventHotKey(49, cmdKey+optionKey, myHotKeyID, GetApplicationEventTarget(), 0, &myHotKeyRef);
     NSLog(@"awake");
-    self.pwd_textfield.title = [self genRandStringLength:20];
 }
 
 OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void  *userData){
@@ -180,14 +135,75 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     return randomString;
 }
 
--(IBAction)onKeyInputEnd:(id)sender{
-    self.pwd_textfield.title = self.key_textfield.title;
-}
 
 -(IBAction)openAddKeyWindow:(id)sender{
     NSWindowController *key_window = [[NSWindowController alloc] initWithWindowNibName:@"AddKeyWindow"];
     if(![[key_window window] isVisible]) {
         [key_window showWindow:sender];
+    }
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+    NSString *root = kDBRootAppFolder; // Should be either kDBRootDropbox or kDBRootAppFolder
+    DBSession *session = [[DBSession alloc] initWithAppKey:appKey appSecret:appSecret root:root];
+    [DBSession setSharedSession:session];
+    
+    NSDictionary *plist = [[NSBundle mainBundle] infoDictionary];
+    NSString *actualScheme = [[[[plist objectForKey:@"CFBundleURLTypes"] objectAtIndex:0] objectForKey:@"CFBundleURLSchemes"] objectAtIndex:0];
+    NSString *desiredScheme = [NSString stringWithFormat:@"db-%@", appKey];
+    NSString *alertText = nil;
+    if ([appKey isEqual:@"APP_KEY"] || [appSecret isEqual:@"APP_SECRET"] || root == nil) {
+        alertText = @"Fill in appKey, appSecret, and root in AppDelegate.m to use this app";
+    } else if (![actualScheme isEqual:desiredScheme]) {
+        alertText = [NSString stringWithFormat:@"Set the url scheme to %@ for the OAuth authorize page to work correctly", desiredScheme];
+    }
+    
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authHelperStateChangedNotification:) name:DBAuthHelperOSXStateChangedNotification object:[DBAuthHelperOSX sharedHelper]];
+    
+    NSAppleEventManager *em = [NSAppleEventManager sharedAppleEventManager];
+    [em setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:)
+          forEventClass:kInternetEventClass andEventID:kAEGetURL];
+    
+    if ([[DBSession sharedSession] isLinked]) {
+        NSLog(@"linked");
+        self.link_button.title = @"Unlink";
+    } else {
+        self.link_button.title = @"Link";
+    }
+}
+
+#pragma mark DBRestClientDelegate
+
+- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
+    
+    NSArray* validExtensions = [NSArray arrayWithObjects:@"jpg", @"jpeg", nil];
+    NSMutableArray* newPhotoPaths = [NSMutableArray new];
+    for (DBMetadata* child in metadata.contents) {
+        NSString* extension = [[child.path pathExtension] lowercaseString];
+        if (!child.isDirectory && [validExtensions indexOfObject:extension] != NSNotFound) {
+            [newPhotoPaths addObject:child.path];
+        }
+    }
+}
+
+- (void)restClient:(DBRestClient*)client metadataUnchangedAtPath:(NSString*)path {
+}
+
+- (void)restClient:(DBRestClient*)client loadMetadataFailedWithError:(NSError*)error {
+    NSLog(@"restClient:loadMetadataFailedWithError: %@", error);
+}
+
+- (void)restClient:(DBRestClient*)client loadedThumbnail:(NSString*)destPath {
+}
+
+- (void)restClient:(DBRestClient*)client loadThumbnailFailedWithError:(NSError*)error {
+    NSLog(@"restClient:loadThumbnailFailedWithError: %@", error);
+}
+
+- (void)authHelperStateChangedNotification:(NSNotification *)notification {
+    if ([[DBSession sharedSession] isLinked]) {
+        // You can now start using the API!
     }
 }
 
