@@ -3,7 +3,7 @@
 //  PasswordSaver
 //
 //  Created by GuoJing on 10-5-3.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 GuoJingMe. All rights reserved.
 //
 
 #import "SqliteHelper.h"
@@ -19,10 +19,16 @@
 @synthesize db;
 @synthesize prefs;
 
--(BOOL)connect{
+-(NSString*)getFilePath {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *docsPath = [paths objectAtIndex:0];
     NSString *path = [docsPath stringByAppendingPathComponent:kFileName];
+    return path;
+}
+
+-(BOOL)connect{
+    NSString *path = [self getFilePath];
+    [path retain];
     prefs = [NSUserDefaults standardUserDefaults];
     db = [FMDatabase databaseWithPath:path];
     if (![db open]) {
@@ -34,9 +40,9 @@
     
     if (![db tableExists:kDbName]) {
         NSLog(@"create table");
-        [db executeUpdate:@"create table if not exists password_saver (key text,pwd,desc text)"];
+        [db executeUpdate:@"create table if not exists password_saver (key text not null,pwd,desc text)"];
     };
-    
+    [path release];
     return YES;
 }
 
@@ -87,7 +93,7 @@
 
 -(NSMutableArray*)getValues:(NSString*) key{
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    NSString *sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver where key like '%@%%'",key];
+    NSString *sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver where key like '%%%@%%'",key];
     if ([key isEqualToString:@""]) {
         sql = [[NSString alloc] initWithFormat:@"select key,desc from password_saver"];
     }

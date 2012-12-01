@@ -3,7 +3,7 @@
 //  PasswordSaver
 //
 //  Created by GuoJing on 10-5-9.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 GuoJingMe. All rights reserved.
 //
 
 #import "QuickWindowController.h"

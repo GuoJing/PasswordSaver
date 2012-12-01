@@ -3,7 +3,7 @@
 //  PasswordSaver
 //
 //  Created by GuoJing on 10-5-3.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 GuoJingMe. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -22,6 +22,7 @@
 @property (assign) FMDatabase *db;
 @property (assign) NSUserDefaults *prefs;
 
+-(NSString*)getFilePath;
 -(BOOL)connect;
 -(BOOL)disconnect;
 -(BOOL)insertKey:(NSString*) key insertPwd:(NSString*) password insertDesc:(NSString*) description;
