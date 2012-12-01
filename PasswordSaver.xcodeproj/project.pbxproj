@@ -23,6 +23,7 @@
 		2383529416635FF200559AB2 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528F16635FF200559AB2 /* FMResultSet.m */; };
 		2383530416646C8F00559AB2 /* crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383530216646C8F00559AB2 /* crypto.m */; };
 		239B5D2A16660A9800BFB626 /* AddWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239B5D2916660A9800BFB626 /* AddWindowController.m */; };
+		23D70E66166996CA00540D15 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 23D70E65166996CA00540D15 /* README.md */; };
 		23DB161D118BE85000356313 /* MainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DB161C118BE85000356313 /* MainController.m */; };
 		23DB92F711966AEB00F2186A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 23DB92F611966AEB00F2186A /* Carbon.framework */; };
 		23DB93981196748E00F2186A /* QuickWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23DB93971196748E00F2186A /* QuickWindow.xib */; };
@@ -74,6 +75,7 @@
 		2383530316646C8F00559AB2 /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = lib/crypto/crypto.h; sourceTree = "<group>"; };
 		239B5D2816660A9800BFB626 /* AddWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddWindowController.h; sourceTree = "<group>"; };
 		239B5D2916660A9800BFB626 /* AddWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddWindowController.m; sourceTree = "<group>"; };
+		23D70E65166996CA00540D15 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		23DB161B118BE85000356313 /* MainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainController.h; sourceTree = "<group>"; };
 		23DB161C118BE85000356313 /* MainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainController.m; sourceTree = "<group>"; };
 		23DB92F611966AEB00F2186A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
@@ -135,6 +137,7 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2367C1881669026D00B864A3 /* Security.framework */,
 				2364D27C16690A2F00E96CA3 /* DropboxOSX.framework */,
 				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
 				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
@@ -189,7 +192,7 @@
 		29B97314FDCFA39411CA2CEA /* PasswordSaver */ = {
 			isa = PBXGroup;
 			children = (
-				2367C1881669026D00B864A3 /* Security.framework */,
+				23D70E65166996CA00540D15 /* README.md */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -289,6 +292,7 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				232DE6BD1195A28200057262 /* APPL.icns in Resources */,
 				23DB93981196748E00F2186A /* QuickWindow.xib in Resources */,
+				23D70E66166996CA00540D15 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
