@@ -23,8 +23,13 @@
 -(IBAction)onRemoveButtonClicked:(id)sender{
     [helper connect];
     [helper removeKey:remove_field.title];
+    [[self remove_panel] orderOut:sender];
+    self.remove_field.title = @"";
+}
+
+-(void)dealloc{
     [helper release];
-    [remove_panel close];
+    [super dealloc];
 }
 
 @end

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "SqliteHelper.h"
 
-@interface RemoveWindowController : NSWindow {
+@interface RemoveWindowController : NSPanel {
     IBOutlet NSPanel *remove_panel;
     IBOutlet NSTextFieldCell *remove_field;
 	IBOutlet NSButton *remove_button;
