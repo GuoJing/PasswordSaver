@@ -51,6 +51,12 @@
 @property (nonatomic,retain) IBOutlet NSMutableArray *keys;
 @property (nonatomic,retain) IBOutlet NSTableView *table_view;
 @property (nonatomic,retain) IBOutlet NSArrayController *array_countroller;
+
+@property (nonatomic, retain) NSArray *filePaths;
+@property (nonatomic, retain) NSArray *fileRevs;
+@property (nonatomic, retain) NSString *currentFilePath;
+@property (nonatomic, retain) NSString *fileHash;
+
 -(NSString *) genRandStringLength: (int) len;
 
 -(IBAction)onTextInput:(id)sender;
@@ -59,4 +65,7 @@
 -(IBAction)onSearchWindowOrderFront:(id)sender;
 -(IBAction)onSearchWindowOpend:(id)sender;
 -(IBAction)openAddKeyWindow:(id)sender;
+
+- (DBRestClient *)restClient;
+- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata;
 @end

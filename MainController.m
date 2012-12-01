@@ -32,6 +32,11 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 @synthesize array_countroller;
 @synthesize link_button;
 
+@synthesize fileHash;
+@synthesize filePaths;
+@synthesize fileRevs;
+@synthesize currentFilePath;
+
 -(id)init{
     [super init];
     keys = [[NSMutableArray alloc] init];
@@ -143,22 +148,32 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     }
 }
 
+- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
+    self.fileHash = metadata.hash;
+    NSArray* validExtensions = [NSArray arrayWithObjects:@"sql", @"pwd", @"", nil];
+    NSMutableArray* newFilePaths = [NSMutableArray new];
+    NSMutableArray* newFileRevs = [NSMutableArray new];
+    for (DBMetadata* child in metadata.contents) {
+        NSString* extension = [[child.path pathExtension] lowercaseString];
+        if (!child.isDirectory && [validExtensions indexOfObject:extension] != NSNotFound) {
+            [newFilePaths addObject:child.path];
+            [newFileRevs addObject:child.rev];
+        }
+    }
+    self.filePaths = newFilePaths;
+    self.fileRevs = newFileRevs;
+    [self uploadFromDropboxFile];
+}
+
+- (void)restClient:(DBRestClient*)client metadataUnchangedAtPath:(NSString*)path {
+    [self loadFromDropboxFile];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     NSString *root = kDBRootAppFolder; // Should be either kDBRootDropbox or kDBRootAppFolder
     DBSession *session = [[DBSession alloc] initWithAppKey:appKey appSecret:appSecret root:root];
     [DBSession setSharedSession:session];
     
-    NSDictionary *plist = [[NSBundle mainBundle] infoDictionary];
-    NSString *actualScheme = [[[[plist objectForKey:@"CFBundleURLTypes"] objectAtIndex:0] objectForKey:@"CFBundleURLSchemes"] objectAtIndex:0];
-    NSString *desiredScheme = [NSString stringWithFormat:@"db-%@", appKey];
-    NSString *alertText = nil;
-    if ([appKey isEqual:@"APP_KEY"] || [appSecret isEqual:@"APP_SECRET"] || root == nil) {
-        alertText = @"Fill in appKey, appSecret, and root in AppDelegate.m to use this app";
-    } else if (![actualScheme isEqual:desiredScheme]) {
-        alertText = [NSString stringWithFormat:@"Set the url scheme to %@ for the OAuth authorize page to work correctly", desiredScheme];
-    }
-    
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authHelperStateChangedNotification:) name:DBAuthHelperOSXStateChangedNotification object:[DBAuthHelperOSX sharedHelper]];
     
     NSAppleEventManager *em = [NSAppleEventManager sharedAppleEventManager];
@@ -166,40 +181,82 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
           forEventClass:kInternetEventClass andEventID:kAEGetURL];
     
     if ([[DBSession sharedSession] isLinked]) {
+        NSString *fileRoot = nil;
         NSLog(@"linked");
         self.link_button.title = @"Unlink";
+        fileRoot = @"/";
+        [self.restClient loadMetadata:fileRoot withHash:self.fileHash];
     } else {
+        //NSString *msg = @"Please sync to dropbox";
+        //NSAlert *alert = [NSAlert alertWithMessageText:nil defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:msg];
+        //[alert beginSheetModalForWindow:nil modalDelegate:nil didEndSelector:nil contextInfo:nil];
         self.link_button.title = @"Link";
     }
 }
 
-#pragma mark DBRestClientDelegate
-
-- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
-    
-    NSArray* validExtensions = [NSArray arrayWithObjects:@"jpg", @"jpeg", nil];
-    NSMutableArray* newPhotoPaths = [NSMutableArray new];
-    for (DBMetadata* child in metadata.contents) {
-        NSString* extension = [[child.path pathExtension] lowercaseString];
-        if (!child.isDirectory && [validExtensions indexOfObject:extension] != NSNotFound) {
-            [newPhotoPaths addObject:child.path];
-        }
+- (void)uploadFromDropboxFile {
+    NSString *path = [self filePath];
+    NSString *filename = kFileName;
+    NSString *destDir = @"/";
+    if ([self.filePaths count] == 0) {
+        NSLog(@"upload new file");
+        [[self restClient] uploadFile:filename toPath:destDir
+                        withParentRev:nil fromPath:path];
+    } else {
+        NSString* fileRev;
+        fileRev = [self.fileRevs objectAtIndex:0];
+        NSLog(@"cover the file");
+        [[self restClient] uploadFile:filename toPath:destDir
+                        withParentRev:fileRev fromPath:path];
     }
 }
 
-- (void)restClient:(DBRestClient*)client metadataUnchangedAtPath:(NSString*)path {
+- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath
+              from:(NSString*)srcPath metadata:(DBMetadata*)metadata {
+    
+    NSLog(@"File uploaded successfully to path: %@, rev: %@ ", metadata.path, metadata.rev);
 }
 
-- (void)restClient:(DBRestClient*)client loadMetadataFailedWithError:(NSError*)error {
-    NSLog(@"restClient:loadMetadataFailedWithError: %@", error);
+- (void)restClient:(DBRestClient*)client uploadFileFailedWithError:(NSError*)error {
+    NSLog(@"File upload failed with error - %@", error);
 }
 
-- (void)restClient:(DBRestClient*)client loadedThumbnail:(NSString*)destPath {
+- (void)loadFromDropboxFile {
+    if ([self.filePaths count] == 0) {
+        NSLog(@"WARN: No file in app folder");
+    } else {
+        NSString* filePath;
+        filePath = [self.filePaths objectAtIndex:0];
+        if ([filePath isEqual:self.currentFilePath]) {
+            NSLog(@"find file");
+            return;
+        }
+        self.currentFilePath = filePath;
+        NSLog(@"current file path %@", filePath);
+        [self.restClient loadFile:self.currentFilePath intoPath:[self filePath]];
+    }
 }
 
-- (void)restClient:(DBRestClient*)client loadThumbnailFailedWithError:(NSError*)error {
-    NSLog(@"restClient:loadThumbnailFailedWithError: %@", error);
+- (NSString*)filePath {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docsPath = [paths objectAtIndex:0];
+    NSString *path = [docsPath stringByAppendingPathComponent:kFileName];
+    return path;
 }
+
+- (void)restClient:(DBRestClient*)client loadedFile:(NSString*)localPath {
+    NSLog(@"File loaded into path: %@", localPath);
+}
+
+- (DBRestClient *)restClient {
+    if (!restClient) {
+        restClient = [[DBRestClient alloc] initWithSession:[DBSession sharedSession]];
+        restClient.delegate = (id)self;
+    }
+    return restClient;
+}
+
+#pragma mark DBRestClientDelegate
 
 - (void)authHelperStateChangedNotification:(NSNotification *)notification {
     if ([[DBSession sharedSession] isLinked]) {
