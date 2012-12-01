@@ -22,6 +22,7 @@
 		2383529316635FF200559AB2 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528D16635FF200559AB2 /* FMDatabaseQueue.m */; };
 		2383529416635FF200559AB2 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383528F16635FF200559AB2 /* FMResultSet.m */; };
 		2383530416646C8F00559AB2 /* crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 2383530216646C8F00559AB2 /* crypto.m */; };
+		238FF682166A3FEF00C1B27C /* RemoveWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 238FF681166A3FEF00C1B27C /* RemoveWindowController.m */; };
 		239B5D2A16660A9800BFB626 /* AddWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 239B5D2916660A9800BFB626 /* AddWindowController.m */; };
 		23D70E66166996CA00540D15 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 23D70E65166996CA00540D15 /* README.md */; };
 		23DB161D118BE85000356313 /* MainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DB161C118BE85000356313 /* MainController.m */; };
@@ -73,6 +74,8 @@
 		2383528F16635FF200559AB2 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = lib/db/FMResultSet.m; sourceTree = "<group>"; };
 		2383530216646C8F00559AB2 /* crypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = crypto.m; path = lib/crypto/crypto.m; sourceTree = "<group>"; };
 		2383530316646C8F00559AB2 /* crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crypto.h; path = lib/crypto/crypto.h; sourceTree = "<group>"; };
+		238FF680166A3FEF00C1B27C /* RemoveWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoveWindowController.h; sourceTree = "<group>"; };
+		238FF681166A3FEF00C1B27C /* RemoveWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemoveWindowController.m; sourceTree = "<group>"; };
 		239B5D2816660A9800BFB626 /* AddWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddWindowController.h; sourceTree = "<group>"; };
 		239B5D2916660A9800BFB626 /* AddWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddWindowController.m; sourceTree = "<group>"; };
 		23D70E65166996CA00540D15 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				235FA349166315CB00F0E4A8 /* Consts.m */,
 				239B5D2816660A9800BFB626 /* AddWindowController.h */,
 				239B5D2916660A9800BFB626 /* AddWindowController.m */,
+				238FF680166A3FEF00C1B27C /* RemoveWindowController.h */,
+				238FF681166A3FEF00C1B27C /* RemoveWindowController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -316,6 +321,7 @@
 				2383529416635FF200559AB2 /* FMResultSet.m in Sources */,
 				2383530416646C8F00559AB2 /* crypto.m in Sources */,
 				239B5D2A16660A9800BFB626 /* AddWindowController.m in Sources */,
+				238FF682166A3FEF00C1B27C /* RemoveWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

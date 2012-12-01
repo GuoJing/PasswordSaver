@@ -25,9 +25,9 @@
 }
 
 -(IBAction)onAddButtonClicked:(id)sender{
-    BOOL is_key_entered=[key_textfield.title isEqual:@""];
-    BOOL is_pwd_entered=[pwd_textfield.title isEqual:@""];
-    if(is_key_entered||is_pwd_entered)
+    BOOL is_key_not_entered=[key_textfield.title isEqual:@""];
+    BOOL is_pwd_not_entered=[pwd_textfield.title isEqual:@""];
+    if(is_key_not_entered||is_pwd_not_entered)
     {
         error_textfield.title=@"Please input all the text field.";
     }

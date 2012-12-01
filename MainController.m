@@ -20,7 +20,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 @synthesize get_button;
 @synthesize add_button;
 @synthesize editable;
-@synthesize add_window;
 @synthesize add_panel;
 @synthesize search_panel;
 @synthesize loading_resc;
@@ -67,8 +66,18 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         // The link button turns into an unlink button when you're linked
         [[DBSession sharedSession] unlinkAll];
         restClient = nil;
+        [self updateLinkButton];
     } else {
         [[DBAuthHelperOSX sharedHelper] authenticate];
+    }
+}
+
+- (void)updateLinkButton {
+    if ([[DBSession sharedSession] isLinked]) {
+        self.link_button.title = @"Unlink";
+    } else {
+        self.link_button.title = @"Link";
+        self.link_button.state = [[DBAuthHelperOSX sharedHelper] isLoading] ? NSOffState : NSOnState;
     }
 }
 
@@ -175,7 +184,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     [DBSession setSharedSession:session];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(authHelperStateChangedNotification:) name:DBAuthHelperOSXStateChangedNotification object:[DBAuthHelperOSX sharedHelper]];
-    
+    [self updateLinkButton];
     NSAppleEventManager *em = [NSAppleEventManager sharedAppleEventManager];
     [em setEventHandler:self andSelector:@selector(getUrl:withReplyEvent:)
           forEventClass:kInternetEventClass andEventID:kAEGetURL];
@@ -187,9 +196,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         fileRoot = @"/";
         [self.restClient loadMetadata:fileRoot withHash:self.fileHash];
     } else {
-        //NSString *msg = @"Please sync to dropbox";
-        //NSAlert *alert = [NSAlert alertWithMessageText:nil defaultButton:nil alternateButton:nil otherButton:nil informativeTextWithFormat:msg];
-        //[alert beginSheetModalForWindow:nil modalDelegate:nil didEndSelector:nil contextInfo:nil];
         self.link_button.title = @"Link";
     }
 }
@@ -261,6 +267,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 - (void)authHelperStateChangedNotification:(NSNotification *)notification {
     if ([[DBSession sharedSession] isLinked]) {
         // You can now start using the API!
+        [self updateLinkButton];
     }
 }
 
