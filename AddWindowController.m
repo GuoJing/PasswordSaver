@@ -45,6 +45,7 @@
             [loading_resc stopAnimation:sender];
             [loading_resc setHidden:TRUE];
             [add_panel orderOut:sender];
+            [self emptyTextField:sender];
         }
         else
         {
