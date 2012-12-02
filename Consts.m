@@ -15,3 +15,5 @@ NSString * const kKey = @"howcouldanyonedothi";
 
 NSString * const appKey = @"uid26iomr01vzd7";
 NSString * const appSecret = @"idnjjl9p0nwpfid";
+
+NSString * const kHelpSite = @"http://www.guojing.me/release/password/help/";

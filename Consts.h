@@ -14,3 +14,4 @@ extern NSString * const kKey;
 
 extern NSString * const appKey;
 extern NSString * const appSecret;
+extern NSString * const kHelpSite;

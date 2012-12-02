@@ -159,7 +159,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata {
     self.fileHash = metadata.hash;
-    NSArray* validExtensions = [NSArray arrayWithObjects:@"sql", @"pwd", @"", nil];
+    NSArray* validExtensions = [NSArray arrayWithObjects:@"sql", @"pwd", nil];
     NSMutableArray* newFilePaths = [NSMutableArray new];
     NSMutableArray* newFileRevs = [NSMutableArray new];
     for (DBMetadata* child in metadata.contents) {
@@ -204,6 +204,9 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     NSString *path = [self filePath];
     NSString *filename = kFileName;
     NSString *destDir = @"/";
+    NSString *time = [self currentTimeFormat];
+    NSLog(@"current time is %@", time);
+    NSString *backname = [[NSString alloc] initWithFormat:@"%@-%@", kFileName, time];
     if ([self.filePaths count] == 0) {
         NSLog(@"upload new file");
         [[self restClient] uploadFile:filename toPath:destDir
@@ -214,7 +217,18 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         NSLog(@"cover the file");
         [[self restClient] uploadFile:filename toPath:destDir
                         withParentRev:fileRev fromPath:path];
+        [[self restClient] uploadFile:backname toPath:destDir
+                        withParentRev:nil fromPath:path];
     }
+}
+
+- (NSString *)currentTimeFormat {
+    NSDate *date = [[NSDate alloc] init];
+    NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    [dateFormatter setDateFormat:@"dd-MM-yyyy"];
+    NSString *dateString = [dateFormatter stringFromDate:date];
+    return dateString;
 }
 
 - (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath
@@ -269,6 +283,10 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
         // You can now start using the API!
         [self updateLinkButton];
     }
+}
+
+-(IBAction)openHelpSite:(id)sender{
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:kHelpSite]];
 }
 
 @end

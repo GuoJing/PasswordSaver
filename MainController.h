@@ -61,6 +61,7 @@
 -(IBAction)onSearchWindowOrderFront:(id)sender;
 -(IBAction)onSearchWindowOpend:(id)sender;
 -(IBAction)openAddKeyWindow:(id)sender;
+-(IBAction)openHelpSite:(id)sender;
 
 - (DBRestClient *)restClient;
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata*)metadata;
