@@ -99,7 +99,7 @@
     }
     FMResultSet *results = [db executeQuery:sql];
     while ([results next]){
-        NSString *keyValue = [results stringForColumn:@"key"];
+        NSString *keyValue = @"Secret";
         NSString * pwdValue = @"";
         NSString *descValue = [results stringForColumn:@"desc"];
         KeyModel *keyModel = [[KeyModel alloc] initWithKey:keyValue initWithPassword:pwdValue initWithDescription:descValue];

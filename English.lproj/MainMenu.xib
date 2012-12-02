@@ -695,6 +695,7 @@
 											<int key="NSvFlags">4370</int>
 											<string key="NSFrameSize">{411, 487}</string>
 											<reference key="NSSuperview" ref="409538504"/>
+											<reference key="NSNextKeyView" ref="122574969"/>
 											<bool key="NSViewCanDrawConcurrently">YES</bool>
 											<bool key="NSEnabled">YES</bool>
 											<bool key="NSAllowsLogicalLayoutDirection">NO</bool>
@@ -843,7 +844,7 @@
 							</object>
 							<string key="NSFrame">{{-1, 0}, {411, 487}}</string>
 							<reference key="NSSuperview" ref="781236513"/>
-							<reference key="NSNextKeyView" ref="122574969"/>
+							<reference key="NSNextKeyView" ref="409538504"/>
 							<bool key="NSViewCanDrawConcurrently">YES</bool>
 							<int key="NSsFlags">133648</int>
 							<reference key="NSVScroller" ref="122574969"/>
