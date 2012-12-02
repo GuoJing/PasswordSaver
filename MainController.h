@@ -58,7 +58,6 @@
 -(IBAction)onTextInput:(id)sender;
 -(IBAction)onButtonClicked:(id)sender;
 -(IBAction)onSearchEnd:(id)sender;
--(IBAction)onSearchWindowOrderFront:(id)sender;
 -(IBAction)onSearchWindowOpend:(id)sender;
 -(IBAction)openAddKeyWindow:(id)sender;
 -(IBAction)openHelpSite:(id)sender;

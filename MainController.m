@@ -102,10 +102,6 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     [helper disconnect];
 }
 
--(IBAction)onSearchWindowOrderFront:(id)sender{
-    
-}
-
 -(void)awakeFromNib{
     EventHotKeyRef myHotKeyRef;
     EventHotKeyID myHotKeyID;
