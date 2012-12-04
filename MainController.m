@@ -38,6 +38,7 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
 
 -(id)init{
     [super init];
+    prefs = [NSUserDefaults standardUserDefaults];
     keys = [[NSMutableArray alloc] init];
     helper = [[SqliteHelper alloc] init];
     return self;
@@ -106,15 +107,16 @@ OSStatus myHotKeyHandler(EventHandlerCallRef nextHandler, EventRef anEvent, void
     EventHotKeyRef myHotKeyRef;
     EventHotKeyID myHotKeyID;
     EventTypeSpec eventType;
-    
+    int key_num = [prefs integerForKey:@"shortcut"];
     eventType.eventClass=kEventClassKeyboard;
     eventType.eventKind=kEventHotKeyPressed;
     InstallApplicationEventHandler(&myHotKeyHandler,1,&eventType,self,NULL);
     myHotKeyID.signature='mhk1';
     myHotKeyID.id=1;
-    NSLog(@"%d", cmdKey);
-    NSLog(@"%d", optionKey);
-    RegisterEventHotKey(49, cmdKey+optionKey, myHotKeyID, GetApplicationEventTarget(), 0, &myHotKeyRef);
+    if (key_num||0==key_num) {
+        key_num = cmdKey + optionKey;
+    }
+    RegisterEventHotKey(49, key_num, myHotKeyID, GetApplicationEventTarget(), 0, &myHotKeyRef);
     NSLog(@"awake");
 }
 

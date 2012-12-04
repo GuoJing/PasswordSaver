@@ -29,6 +29,7 @@
     IBOutlet NSArrayController *array_countroller;
     DBRestClient *restClient;
     SqliteHelper *helper;
+    NSUserDefaults *prefs;
     
 }
 
